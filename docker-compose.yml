@@ -1,0 +1,25 @@
+version: "3.8"
+services:
+  master-node:
+    image: jenkins-master:latest
+    build:
+      context: .
+      dockerfile: master-node.dockerfile
+    ports:
+      - 8080:8080
+    volumes:
+      - jenkins_home:C:/Users/jenkins/.jenkins
+
+  agent-win-01:
+    image: jenkins-agent:latest
+    build:
+      context: .
+      dockerfile: build-agent.dockerfile
+    init: true
+    volumes:
+      - agent-win-01-workDir:C:/Users/jenkins/Work
+    command: java -jar C:/ProgramData/Jenkins/agent.jar -jnlpUrl http://master-node:8080/computer/agent-win-01/jenkins-agent.jnlp -secret 370dc50a3ce7ee371845000bab0c6ca7febd7d2bd6aca6374b0728c26a9a3e89 -workDir C:/Users/jenkins/Work
+
+volumes:
+  jenkins_home:
+  agent-win-01-workDir:
